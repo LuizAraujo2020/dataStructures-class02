@@ -29,10 +29,15 @@ int menu(void);
 //float media(int, *int); // passagem de parametro = valor, referencia
 //float media(struct tRegistro); // passagem de parametro = valor
 
+
+/*
+ Alterar a inclusão de modo que permita que a lista seja ordenada pelo código do produto;
+ */
+
 int main(int argc, const char * argv[]) {
     // Local
     struct tNo *lista=NULL;
-    struct tNo *p;
+    struct tNo *p, *aux, *q;
     struct tProduto produto;
     int opcao;
     
@@ -53,10 +58,48 @@ int main(int argc, const char * argv[]) {
                 p = malloc(sizeof(struct tNo));
                 p->dado = produto; // (*p).dado = produto;
                 
-                // Incluir o produto (p) na lista (lista)
-                // Inclusao no INICIO
-                p->prox = lista;
-                lista = p;
+                //se o primeiro produto
+                if(lista == NULL) {// se vazia
+                    p->prox = NULL;
+                    lista = p;
+                } else {
+                    if(p->dado.codigo < lista->dado.codigo){ //inicio
+                        p->prox = lista;
+                        lista = p;
+                    } else { //se o ultimo produto
+                        aux = lista;
+                        while(aux->prox != NULL) {
+                            aux = aux->prox;
+                        }
+                        if (p->dado.codigo > aux->dado.codigo) {
+                            aux->prox = p;
+                            p->prox = NULL;
+                        } else { //se algum do meio
+                            aux = lista;
+                            while (p->dado.codigo > aux->dado.codigo) {
+                                q = p;
+                                aux = aux->prox;
+                            }
+                            p->prox = q->prox;
+                            q->prox = p;
+                            
+                        }
+                    
+                    }
+                    
+                    
+                    
+                }
+                
+                
+                
+                
+//                p->dado = produto; // (*p).dado = produto;
+//
+//                // Incluir o produto (p) na lista (lista)
+//                // Inclusao no INICIO
+//                p->prox = lista;
+//                lista = p;
                 
                 break;
             case 2:
@@ -71,6 +114,12 @@ int main(int argc, const char * argv[]) {
     } while (opcao != 0);
     // sair...
     // free(...);
+    aux = lista;
+    while (aux->prox != NULL) {
+        p = aux;
+        aux = aux->prox;
+        free(p);
+    }
     return 0;
 }
 
